@@ -1,0 +1,19 @@
+###
+post http://localhost:5000/new-class
+Content-Type: application/json
+
+{
+    
+    "name": "Progressive Power Flow",
+    "image": "https://i.ibb.co/1q6TT6j/women-on-yoga-2021-08-26-15-44-27-utc.jpg",
+    "availableSeats": 781,
+    "price": "70",
+    "videoLink": "https://youtu.be/UCgvZ4VkLMQ",
+    "description": "Aliq is notm hendr erit a augue insu image pellen tes.",
+    "instructorName": "Watson T.",
+    "instructorEmail": "watson@taylor.com",
+    "status": "approved",
+    "submitted": "2024-02-28T20:01:12.168Z",
+    "totalEnrolled": 9,
+    "reason": null
+  }
