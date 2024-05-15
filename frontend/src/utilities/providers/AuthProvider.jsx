@@ -1,6 +1,7 @@
 import React, { createContext, useEffect, useState } from 'react'
 import { app } from '../../config/firebase.init';
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, GoogleAuthProvider, onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, updateProfile, GoogleAuthProvider, onAuthStateChanged, signInWithPopup } from "firebase/auth";
+import axios, { Axios } from 'axios';
 export const AuthContext = createContext()
 function AuthProvider({children}) {
     
@@ -23,7 +24,7 @@ function AuthProvider({children}) {
     }
 
     //login with user
-    const login = async()=>{
+    const login = async(email,password)=>{
         try {
             setLoader(true);
             return await signInWithEmailAndPassword(auth, email, password);
@@ -59,6 +60,7 @@ function AuthProvider({children}) {
     const googleprovider = new GoogleAuthProvider();
     const googleLogin = async()=>{
         try {
+            setLoader(true);
             return await signInWithPopup(auth, googleprovider)
         } catch (error) {
             setError(error.code)
@@ -74,8 +76,8 @@ function AuthProvider({children}) {
         const unsubscribe = auth.onAuthStateChanged((user)=>{
             setUser(user);
             if(user){
-                axios.post('/api/set-token',{email:user.email,name:user.displayName})
-                .then((data)=>{
+                axios.post('http://localhost:5000/api/set-token',{email:user.email,name:user.displayName})
+                .then(data=>{
                     if(data.data.token){
                         localStorage.setItem('token',data.data.token)
                         setLoader(false);
@@ -89,7 +91,7 @@ function AuthProvider({children}) {
         return ()=>unsubscribe();
     },[])
 
-    const contextValue = {user,signUp,login,logout,updateUser,googleLogin,error,setError}
+    const contextValue = {user,loader,setLoader,signUp,login,logout,updateUser,googleLogin,error,setError}
   return (
     <AuthContext.Provider value = {contextValue}>
         {children}

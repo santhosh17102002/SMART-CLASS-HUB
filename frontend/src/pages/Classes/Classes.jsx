@@ -11,6 +11,7 @@ import axios from 'axios';
 function Classes() {
   const [classes,setClasses] = useState([])
   const {currentUser} = useUser()
+  //console.log(currentUser)
   const role = currentUser?.role;
   const [enrolledClasses,setEnrolledClasses] = useState([]);
   const [hoveredCard,setHoveredCard] = useState(null);
@@ -30,7 +31,7 @@ function Classes() {
 const handleSelect = (id)=>{
   //console.log(id)
   axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
-  .then((res)=>setClasses(res.data))
+  .then((res)=>setEnrolledClasses(res.data))
 
   .catch((err)=>{
     console.log(err)
@@ -84,7 +85,7 @@ const handleSelect = (id)=>{
         <h1 className='text-4xl font-bold text-center text-secondary'>Classes</h1>
       </div>
 
-      <div className='my-grid w-[90%] mx-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8'>
+      <div className='my-grid w-[90%] mx-auto grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-20'>
         {
           classes.map((cls,index) =>(
             <div key={index} 
