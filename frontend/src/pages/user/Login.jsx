@@ -4,7 +4,7 @@ import { FaRegEye } from "react-icons/fa";
 import { FaRegEyeSlash } from "react-icons/fa";
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import GoogleLogin from '../../components/Social/GoogleLogin';
-import useAuth from '../../hooks/useAuth';
+import { useAuth } from '../../hooks/useAuth';
 function Login() {
   const [showpassword,setShowPassword] = useState(false);
   const location = useLocation();
@@ -17,7 +17,8 @@ function Login() {
     const data = new FormData(e.target);
     const formData = Object.fromEntries(data);
     //console.log(formData)
-    login(formData.email,formData.password).then(()=>{
+    login(formData.email,formData.password)
+    .then(()=>{
       alert("Login Successful")
       navigate(location.state?.from || '/dashboard')
     }).catch((err)=>{
@@ -32,6 +33,8 @@ function Login() {
       <div className='shadow-gray-500 shadow-md mx-auto max-w-lg mb-0 mt-6 rounded-lg p-4 shodaow-lg sm:p-6 lg:p-8'>
         <form className='space-y-4' onSubmit={handleSubmit}>
           <p className='text-center text-red-400 text-lg font-medium'>Sign in to your account</p>
+          
+         
           <div>
             <label htmlFor='email' className='sr-only'>Email</label>
             <div className='relative'>

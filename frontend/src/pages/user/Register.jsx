@@ -1,6 +1,7 @@
 import React, { useContext } from 'react'
 import { useForm } from "react-hook-form";
 import { AiOutlineLock, AiOutlineMail, AiOutlinePhone, AiOutlinePicture, AiOutlineUser } from "react-icons/ai";
+import { toast } from 'react-toastify';
 import { HiOutlineLocationMarker } from 'react-icons/hi';
 import { Link, useNavigate } from 'react-router-dom';
 import GoogleLogin from '../../components/Social/GoogleLogin';
@@ -12,7 +13,7 @@ const Register = () => {
   const {signUp,updateUser,setError} = useContext(AuthContext);
   const password = watch('password','')
   
-  const onSubmit = data => {
+  const onSubmit = (data) => {
     setError('')
     signUp(data.email,data.password) .then((result) => {
       const user = result.user;
@@ -40,12 +41,17 @@ const Register = () => {
                     throw new Error(err);
                 });
         }
-        }).catch((err) => {
-          setError(err.code);
-          throw new Error(err);
-      })
+        })
       }
-    })
+    }).catch((err) => {
+      setError(err.code);
+      throw new Error(err);
+  }),
+  {
+    pending: 'Please wait...',
+    success: 'Registration successful!',
+    error: 'Registration failed!',
+}
     //console.log(data.password);
     //console.log(data.confirmPassword);
   }

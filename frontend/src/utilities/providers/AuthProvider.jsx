@@ -72,24 +72,40 @@ function AuthProvider({children}) {
 
 
     //get currently signed in user
-    useEffect(()=>{
-        const unsubscribe = auth.onAuthStateChanged((user)=>{
-            setUser(user);
-            if(user){
-                axios.post('http://localhost:5000/api/set-token',{email:user.email,name:user.displayName})
-                .then(data=>{
-                    if(data.data.token){
-                        localStorage.setItem('token',data.data.token)
-                        setLoader(false);
-                    }
-                })
-            }else{
-                localStorage.removeItem('token')
-                setLoader(false);
-            }
-        })
-        return ()=>unsubscribe();
-    },[])
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+          setUser(user);
+      
+          if (user) {
+            const fetchData = async () => {
+              try {
+                const response = await axios.post('http://localhost:5000/api/set-token', {
+                  email: user.email,
+                  name: user.displayName,
+                });
+      
+                if (response.data && response.data.token) {
+                  localStorage.setItem('token', response.data.token);
+                } else {
+                  console.error("Failed to retrieve token from API");
+                }
+              } catch (error) {
+                console.error("Error fetching token:", error);
+              } finally {
+                setLoader(false); // Set loader to false regardless of success or error
+              }
+            };
+      
+            fetchData();
+          } else {
+            localStorage.removeItem('token');
+            setLoader(false);
+          }
+        });
+      
+        return () => unsubscribe();
+      }, [auth]);
+      
 
     const contextValue = {user,loader,setLoader,signUp,login,logout,updateUser,googleLogin,error,setError}
   return (

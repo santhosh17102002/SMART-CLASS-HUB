@@ -1,36 +1,39 @@
 const express = require('express')
 const app = express()
+const jwt = require('jsonwebtoken');
 const port = process.env.PORT || 5000
 require('dotenv').config()
 const stripe = require("stripe")(process.env.PAYMENT_KEY);
-const jwt = require('jsonwebtoken');
+
 const cors = require('cors')
 
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 //middleware
 app.use(cors())
 app.use(express.json())
 
 //verify token
-const verifyJWT = (req,res,next)=>{
+const verifyJWT = (req, res, next) => {
   const authorization = req.headers.authorization;
-  if(!authorization){
-    return res.status(401).send({message:'Invalid authorization'})
-
+  console.log('Authorization Header:', authorization); // Debugging log
+  if (!authorization) {
+    return res.status(401).send({ error: true, message: 'Invalid authorization' });
   }
 
-  const token = authorization?.split(' ')
-  jwt.verify (token,process.env.ACCESS_SECRET,(err,decoded)=>{
-    if(err){
-      return res.status(401).send({message:'Forbidden access'})
+  const token = authorization.split(' ')[1];
+  console.log('Token:', token); // Debugging log
+  jwt.verify(token, process.env.ACCESS_SECRET, (err, decoded) => {
+    if (err) {
+      console.error('Token verification error:', err); // Debugging log
+      return res.status(403).send({ error: true, message: 'Forbidden access' });
     }
     req.decoded = decoded;
     next();
-  })
-}
+  });
+};
 
 
 //mongodb connection
-const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASSWORD}@smart-class-hub.gcdebwr.mongodb.net/?retryWrites=true&w=majority&appName=smart-class-hub`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
@@ -57,15 +60,7 @@ async function run() {
     const enrolledCollection = database.collection("enrolled");
     const appliedCollection = database.collection("applied");
 
-    //generate tokens
-    //get the token by using crypto random bytes using 1st command as node and 2nd as require('crypto').randomBytes(64).toString('hex')
-    app.post('/api/set-token',async(req,res)=>{
-      const user = req.body;
-      const token = jwt.sign(user,process.env.ACCESS_SECRET,{
-        expiresIn:'24h'
-      })
-      res.send({token})
-    })
+    
 
     //middlewares for admin and instructor
     const verifyAdmin = async (req,res,next)=>{
@@ -75,7 +70,7 @@ async function run() {
       if(user.role === 'admin'){
         next();
       }else{
-        return res.status(401).send({message:'Unauthorized access'})
+        return res.status(401).send({error: true,message:'Unauthorized access'})
       }
     }
 
@@ -91,18 +86,26 @@ async function run() {
           return res.status(401).send({ error: true, message: 'Unauthorized access' })
       }
     }
-    
+    //generate tokens
+    //get the token by using crypto random bytes using 1st command as node and 2nd as require('crypto').randomBytes(64).toString('hex')
+    app.post('/api/set-token', async (req, res) => {
+      const user = req.body;
+      const token = jwt.sign(user, process.env.ACCESS_SECRET, {
+        expiresIn: '24h'
+      });
+      res.send({ token });
+    });
     //classes collections 
     app.post('/new-class',verifyJWT,verifyInstructor,async(req,res)=>{
       const newClass = req.body;
-      //newClass.availableSeats = parseInt(newClass.availableSeats);
+      newClass.availableSeats = parseInt(newClass.availableSeats);
       const result = await classesCollection.insertOne(newClass);
       res.send(result);
     });
     
     app.get('/classes',async(req,res)=>{
       const query = {status:"approved"};
-      const result = await classesCollection.find().toArray();
+      const result = await classesCollection.find(query).toArray();
       res.send(result)
     })
 
@@ -121,7 +124,7 @@ async function run() {
     })
 
     //update classes only update status and reason
-    app.patch('/change-status/:id',verifyJWT,verifyAdmin,async(req,res)=>{
+    app.put('/change-status/:id',verifyJWT,verifyAdmin,async(req,res)=>{
       const id = req.params.id;
       const status = req.body.status;
       const reason = req.body.reason;
@@ -197,12 +200,12 @@ async function run() {
     })
 
     //get user by email
-    app.get('/user/:email',verifyJWT,async(req,res)=>{
+    app.get('/user/:email', verifyJWT, async (req, res) => {
       const email = req.params.email;
-      const query = {email:email};
+      const query = { email: email };
       const result = await usersCollection.findOne(query);
       res.send(result);
-    })
+    });
 
     //delete users
     app.delete('/delete-user/:id',verifyJWT,verifyAdmin,async(req,res)=>{
@@ -230,7 +233,7 @@ async function run() {
               skills: updatedUser.skills ? updatedUser.skills : null,
           }
       }
-      const result = await userCollection.updateOne(filter, updateDoc, options);
+      const result = await usersCollection.updateOne(filter, updateDoc, options);
       res.send(result);
    })
 
@@ -247,13 +250,13 @@ async function run() {
     //get cart by id
     app.get('/cart-item/:id',verifyJWT,async(req,res)=>{
       const id = req.params.id;
-      const email = req.body.email;
+      const email = req.query.email;
       const query = {
         classId:id,
         userMail:email
       };
       const projection = {classId:1};
-      const result = await cartCollection.findOne(query,{projection:projection})
+      const result = await cartCollection.findOne(query,{projection : projection})
       res.send(result)
     })
 
@@ -262,7 +265,7 @@ async function run() {
       const email = req.params.email;
       const query = {userMail:email};
       const projection = {classId:1};
-      const carts = await cartCollection.find(query,{projection:projection});
+      const carts = await cartCollection.find(query,{projection:projection}).toArray();
       const classIds = carts.map((cart)=>new ObjectId(cart.classId));
       const query2  = {_id:{$in:classIds}};
       const result = await classesCollection.find(query2).toArray();

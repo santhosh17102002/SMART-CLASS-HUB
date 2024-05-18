@@ -15,6 +15,7 @@ function useAxiosSecure() {
     useEffect(()=>{
         const requestInterceptor = axiosSecure.interceptors.request.use((config)=>{
             const token = localStorage.getItem('token');
+            console.log(token)
             if(token){
                 config.headers.Authorization = `Bearer ${token}`;
             }
@@ -25,7 +26,7 @@ function useAxiosSecure() {
             {
                 await logout();
                 navigate('/login');
-                throw error;
+                throw error; 
             }
             throw error;
         })

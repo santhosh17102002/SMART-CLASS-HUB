@@ -1,46 +1,48 @@
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import useAxiosFetch from '../../hooks/useAxiosFetch'
 import { Transition } from '@headlessui/react'
-import { Link } from 'react-router-dom';
-import { AuthContext } from '../../utilities/providers/AuthProvider';
-import useUser from '../../hooks/useUser';
+import { Link, useNavigate } from 'react-router-dom';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import {  toast } from 'react-toastify';
-import axios from 'axios';
+import { useUser } from '../../hooks/useUser';
 
 function Classes() {
-  const [classes,setClasses] = useState([])
-  const {currentUser} = useUser()
-  //console.log(currentUser)
-  const role = currentUser?.role;
-  const [enrolledClasses,setEnrolledClasses] = useState([]);
+  
   const [hoveredCard,setHoveredCard] = useState(null);
-  const axiosFetch = useAxiosFetch();
-  const {user} = useContext(AuthContext);
-  const axiosSecure = useAxiosSecure();
-  console.log("the current user : " , user)
+  
+  const {currentUser} = useUser()
+  
+  const role = currentUser?.role;
+  const navigate = useNavigate();
+  const [enrolledClasses,setEnrolledClasses] = useState([]);
   const handleHover = (index) => {
     setHoveredCard(index);
   }
+  const [classes,setClasses] = useState([])
+  //console.log(currentUser)
+  const axiosFetch = useAxiosFetch();
+  const axiosSecure = useAxiosSecure();
+  
+  //const {user} = useContext(AuthContext);
+  //console.log("the current user : " , user)
+  
 
   useEffect(()=>{
     axiosFetch.get('/classes').then(res=> setClasses(res.data)).catch(err=>console.log(err));
   },[])
 
 //handle add to cart
-const handleSelect = (id)=>{
+/*const handleSelect = (id)=>{
   //console.log(id)
-  axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
-  .then((res)=>setEnrolledClasses(res.data))
-
-  .catch((err)=>{
-    console.log(err)
-  })
+  
   if(!currentUser){
     return toast.error("Please Login first")
   }
+  axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
+  .then(res=>setEnrolledClasses(res.data))
+  .catch(err=>console.log(err))
 
-  axiosSecure.get(`/cart/${id}?email=${currentUser.email}`)
+  axiosSecure.get(`/cart-item/${id}?email=${currentUser.email}`)
   .then(res => {
     if(res.data.classId === id){
       return toast.error("Already added to cart")
@@ -51,18 +53,18 @@ const handleSelect = (id)=>{
       const data = {
         classId : id,
         userMail : currentUser.email,
-        data:new date()
+        data:new Date()
       }
-      toast.promise(axiosSecure.post('/add-to-cart',data)).then(
-        res => console.log(res.data)
-      ),
-      {
+      toast.promise(axiosSecure.post('/add-to-cart',data)
+      .then(res => {
+        console.log(res.data)
+      }),
+      { 
         pending:"Adding to cart....",
         success:{
-          render({data}){
+          render(){
             return "Added to cart"
-          },
-          icon: "🟢",
+          }
         },
         error:{
           render({data}){
@@ -71,11 +73,44 @@ const handleSelect = (id)=>{
           }
         }
         
+      });
+    }
+  })
+  .catch(err => console.log(err));
+}
+*/
+
+const handleSelect=(id) => {
+  //console.log(id);
+  axiosSecure.get(`/enrolled-classes/${currentUser?.email}`)
+  .then((res) => setEnrolledClasses(res.data))
+  .catch((err) => console.log(err))
+
+  if(!currentUser) {
+    alert("Please login first")
+    return navigate('/login')
+
+  }
+  axiosSecure.get(`/cart-item/${id}??email=${currentUser?.email}`)
+  .then(res => {
+    if(res.data.classId === id) {
+      return alert("Already selected")
+    }else if(enrolledClasses.find(item => item.classes._id === id) ) {
+      return alert("Already enrolled")
+    }else{
+      const data = {
+        classId : id,
+        userMail : currentUser?.email,
+        data: new Date()
       }
+      axiosSecure.post('/add-to-cart',data)
+      .then(res => {
+        alert("Added to the cart successfully")
+        console.log(res.data)
+      })
     }
   })
 }
-
 
 
   //console.log(classes)
