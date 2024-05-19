@@ -52,7 +52,7 @@ function Login() {
             </div>
           </div>
           <button type='submit' className='block w-full rounded-lg bg-secondary px-5 py-3 text-sm font-medium text-white' >Sign In</button>
-          <p className='text-center text-sm text-gray-500'>No account ? <Link className='underline'>Sign Up</Link></p>
+          <p className='text-center text-sm text-gray-500'>No account ? <Link to='/register' className='underline'>Sign Up</Link></p>
         </form>
         <GoogleLogin/>
 

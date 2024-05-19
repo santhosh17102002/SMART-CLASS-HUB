@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
 import { ThemeProvider, THEME_ID, createTheme } from '@mui/material/styles';
 import { Switch } from '@mui/material';
 import photoURL from '../../assets/home/girl.jpg'
 import {FaBars} from "react-icons/fa"
 import {motion} from "framer-motion"
+import { AuthContext } from '../../utilities/providers/AuthProvider';
+import Swal from 'sweetalert2';
+import { useUser } from '../../hooks/useUser';
 
 const navLinks = [
     {name : 'Home',route : "/"},
@@ -35,14 +38,47 @@ const NavBar = () => {
     const [isFixed , setIsFixed] = useState(false);
     const [isDarkMode,setIsDarkMode] = useState(false);
     const [navBg,setNavBg] = useState('bg-[#15151580]')
-    const user = true;
-
+    const {currentUser} = useUser();
+    //const user =false;
+    
+    const { user, logout } = useContext(AuthContext);
+    
     const toggleMobileMenu = ()=>{
         setIsMobileMenuOpen(!isMobileMenuOpen);
     }
 
-    const handleLogout =()=>{
-        console.log("logout")
+    
+    const handleLogout = ()=>{
+        
+        
+        {/*from sweet alert 2 implementing logout */}
+        Swal.fire({
+            title: "Are you sure?",
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#3085d6",
+            cancelButtonColor: "#d33",
+            confirmButtonText: "Yes, LogOut me!"
+          }).then((result) => {
+            if (result.isConfirmed) {
+            logout().then(
+                Swal.fire({
+                    title: "Logged Out!",
+                    text: "You are logged out.",
+                    icon: "success"
+                  })
+                  
+
+            ).catch((err)=>{
+                Swal.fire(
+                    'Error!',err.message,"error"
+                )
+            });
+              
+            }
+            navigate('/')
+          });
     }
 
     useEffect(() => {
@@ -73,12 +109,13 @@ const NavBar = () => {
     useEffect(() => {
         if (scrollPosition > 100) {
             if (isHome) {
-                setNavBg('bg-white backdrop-filter backdrop-blur-xl bg-opacity-0 dark:bg-black dark:text-white text-black');
+                setNavBg('bg-white backdrop-filter backdrop-blur-xl bg-opacity-0  dark:text-white text-black');
             }
             else {
                 setNavBg('bg-white dark:bg-black dark:text-white text-black');
             }
         } else {
+            // setNavBg(`dark:text-white ${isHome ? 'text-white bg-transparent' : 'text-black dark:text-white dark:bg-black'}`);
             setNavBg(`${isHome || location.pathname === '/' ? 'bg-transparent' : 'bg-white dark:bg-black'} dark:text-white text-white`);
 
         }
@@ -96,13 +133,13 @@ const NavBar = () => {
                 <div onClick={()=>navigate('/')} className='flex-shrink-0 cursor-pointer pl-7 md:p-0 flex items-center'>
                 <div>
                     
-                <h1 className='text-2xl font-Cinzel inline-flex gap-3 items-center '>SmartClassHub <img src='/laptop-logo.png' className='w-8 h-8'/></h1>
-                    <p className='font-bold text-[13px] tracking-[8px] '>Learning Path</p>
+                <h1 className='text-2xl font-Cinzel inline-flex gap-3  items-center '>SmartClassHub <img src='/laptop-logo.png' className='w-8 h-8'/></h1>
+                    <p className='font-bold text-[13px] tracking-[8px]  '>Learning Path</p>
                 </div>
                 </div>
                 {/*mobile menu icons */}
                 <div className='md:hidden flex items-center'>
-                    <button type="button" onClick={toggleMobileMenu} className='text-grey-300 hover:text-white focus:outline-none'>
+                    <button type="button" onClick={toggleMobileMenu} className='text-gray-300 hover:text-white focus:outline-none'>
                         <FaBars className='h-6 w-7 hover:text-primary'/>
                     </button>
                 </div>
@@ -115,8 +152,11 @@ const NavBar = () => {
                             {
                                 navLinks.map((Link)=>(
                                     <li key={Link.route} >
-                                        <NavLink to ={Link.route} style={{whiteSpace:'nowrap'}} className={({ isActive }) => `font-bold 
-                                        ${isActive ? ' text-secondary' : `${navBg.includes('bg-transparent') ? 'text-white' : 'text-black dark:text-white'}`} hover:text-secondary duration-300n`}>{Link.name}
+                                    <NavLink
+                                            className={({ isActive }) => `font-bold ${isActive ? 'text-secondary' : `${navBg.includes('bg-transparent') ? 'text-white' : 'text-black dark:text-white'}`} hover:text-secondary duration-300`}
+                                            to={Link.route}
+                                            style={{ whiteSpace: 'nowrap' }}
+                                        >{Link.name}
                                         </NavLink>
                                     </li>
                                 ))
@@ -128,11 +168,11 @@ const NavBar = () => {
                                         to="/register" 
                                         className={({ isActive }) =>
                                          `font-bold ${
-                                            isActive ? ' text-secondary' : `${navBg.includes('bg-transparent') ? 'text-white' : 'text-black dark:text-white'}`} hover:text-secondary duration-300n`}>Register
+                                            isActive ? ' text-secondary' : `${navBg.includes('bg-transparent') ? ' text-white ' : 'text-black dark:text-white'}`} hover:text-secondary duration-300n`}>Register
                                     </NavLink>
                                 </li> ): 
                                 <li>
-                                    <NavLink to="/login" className={({ isActive }) => `font-bold ${isActive ? ' text-secondary' : `${navBg.includes('bg-transparent') ? 'text-black' : 'text-white dark:text-white'}`} hover:text-secondary duration-300n`}>
+                                    <NavLink to="/login" className={({ isActive }) => `font-bold ${isActive ? ' text-secondary' : `${navBg.includes('bg-transparent') ? 'text-white' : 'text-black dark:text-white'}`} hover:text-secondary duration-300n`}>
                                     Login
                                     </NavLink>
                                 </li> 
@@ -146,7 +186,7 @@ const NavBar = () => {
                                 </li>
                             }
                             {
-                                user&& <li>
+                                user && <li>
                                     <img src={photoURL} alt="" className='h-[40px] w-[40px] rounded-full'/>
                                 </li>
                             }

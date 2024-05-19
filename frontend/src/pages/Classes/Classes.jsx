@@ -11,7 +11,7 @@ function Classes() {
   const [hoveredCard,setHoveredCard] = useState(null);
   
   const {currentUser} = useUser()
-  
+  //console.log(currentUser)
   const role = currentUser?.role;
   const navigate = useNavigate();
   const [enrolledClasses,setEnrolledClasses] = useState([]);
@@ -91,7 +91,7 @@ const handleSelect=(id) => {
     return navigate('/login')
 
   }
-  axiosSecure.get(`/cart-item/${id}??email=${currentUser?.email}`)
+  axiosSecure.get(`/cart-item/${id}?email=${currentUser?.email}`)
   .then(res => {
     if(res.data.classId === id) {
       return alert("Already selected")
@@ -103,11 +103,31 @@ const handleSelect=(id) => {
         userMail : currentUser?.email,
         data: new Date()
       }
-      axiosSecure.post('/add-to-cart',data)
+      /*axiosSecure.post('/add-to-cart',data)
       .then(res => {
         alert("Added to the cart successfully")
         console.log(res.data)
-      })
+      })*/
+      toast.promise(axiosSecure.post('/add-to-cart',data)
+      .then(res => {
+        console.log(res.data)
+        alert("successfully added to the cart")
+      }),
+      { 
+        pending:"Adding to cart....",
+        success:{
+          render(){
+            return "Added to cart"
+          }
+        },
+        error:{
+          render({data}){
+            // When the promise reject, data will contains the error
+            return `Error : ${data.message}`
+          }
+        }
+        
+      });
     }
   })
 }
@@ -160,7 +180,7 @@ const handleSelect=(id) => {
                     <span className='text-gray-600 text-xs '>Available Seats : {cls.availableSeats}</span>
                     <span className='text-green-500 font-semibold'>{cls.price}</span>
                   </div>
-                  <Link to={'/class/${cls._id}'}>
+                  <Link to={`/class/${cls._id}`}>
                     <button className='px-4 py-2 mt-4 w-full mx-auto text-white disabled:bg-red-300 bg-secondary duration-300 rounded hover:bg-red-700'>View</button>
                   </Link>
                 </div>

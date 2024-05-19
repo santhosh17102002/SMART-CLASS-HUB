@@ -15,19 +15,20 @@ app.use(express.json())
 //verify token
 const verifyJWT = (req, res, next) => {
   const authorization = req.headers.authorization;
-  console.log('Authorization Header:', authorization); // Debugging log
+  //console.log('Authorization Header:', authorization); // Debugging log
   if (!authorization) {
     return res.status(401).send({ error: true, message: 'Invalid authorization' });
   }
 
   const token = authorization.split(' ')[1];
-  console.log('Token:', token); // Debugging log
+  //console.log('Token:', token); // Debugging log
   jwt.verify(token, process.env.ACCESS_SECRET, (err, decoded) => {
     if (err) {
       console.error('Token verification error:', err); // Debugging log
       return res.status(403).send({ error: true, message: 'Forbidden access' });
     }
     req.decoded = decoded;
+    //console.log(decoded)
     next();
   });
 };
@@ -78,7 +79,7 @@ async function run() {
     const verifyInstructor = async (req, res, next) => {
       const email = req.decoded.email;
       const query = { email: email };
-      const user = await userCollection.findOne(query);
+      const user = await usersCollection.findOne(query);
       if (user.role === 'instructor' || user.role === 'admin') {
           next()
       }
@@ -110,12 +111,15 @@ async function run() {
     })
 
     //get classes by instructor email
-    app.get('/classes/:email',verifyJWT,verifyInstructor,async(req,res)=>{
+    app.get('/classes/:email', verifyJWT, verifyInstructor, async (req, res) => {
+      //console.log(req.params.email)
       const email = req.params.email;
-      const query = {instructorEmail:email}
+      const query = { instructorEmail: email };
+      //console.log(query)
       const result = await classesCollection.find(query).toArray();
       res.send(result);
-    })
+      //console.log(result)
+  })
 
     //manage classes
     app.get('/classes-manage',async(req,res)=>{
@@ -147,14 +151,37 @@ async function run() {
       res.send(result)
     });
 
+    //get approved classes through email
+    app.get('/approved-classes/:email',verifyJWT,verifyInstructor,async(req,res)=>{
+      const email = req.params.email;
+      const query={status :"approved",instructorEmail:email};
+      const result = await classesCollection.find(query).toArray();
+      res.send(result)
+    });
+
+    //get all pending classes through email
+    app.get('/pending-classes/:email',verifyJWT,verifyInstructor,async(req,res)=>{
+      const email = req.params.email;
+      const query={status :"pending",instructorEmail:email};
+      const result = await classesCollection.find(query).toArray();
+      res.send(result)
+    });
+
     //get single classes
-    app.get('/class/:id',async(req,res)=>{
+    /*app.get('/class/:id',async(req,res)=>{
       const id = req.params.id;
       const query = {_id: new ObjectId(id)};
       const result = await classesCollection.findOne(query);
       res.send(result)
-    })
+    })*/
 
+    
+    app.get('/class/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await classesCollection.findOne(query);
+            res.send(result);
+        }) 
     //update class details {all data}
     app.put('/update-class/:id',verifyJWT,verifyInstructor,async(req,res)=>{
       const id = req.params.id;
@@ -307,7 +334,7 @@ async function run() {
         query={classId:singleClassId,userMail:userEmail};
 
       }else{
-        query={classesQuery} = {_id:{$in:classesId.map(id=>new ObjectId(id))}};
+        query={classId : {$in:classesId}}
         
       }
       const classesQuery = { _id: { $in: classesId.map(id => new ObjectId(id)) } }
