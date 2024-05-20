@@ -5,7 +5,7 @@ import { Fade, Slide } from "react-awesome-reveal";
 import moment from 'moment'
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
-const ApprovedCourse = () => {
+const PendingCourses = () => {
     const [classes, setClasses] = useState([]);
     const { currentUser, isLoading } = useUser();
     const navigate = useNavigate();
@@ -91,4 +91,4 @@ const ApprovedCourse = () => {
     );
 };
 
-export default ApprovedCourse;
+export default PendingCourses;

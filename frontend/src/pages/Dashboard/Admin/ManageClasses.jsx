@@ -4,6 +4,7 @@ import useAxiosFetch from '../../../hooks/useAxiosFetch';
 import useAxiosSecure from '../../../hooks/useAxiosSecure';
 import { Pagination, createTheme } from '@mui/material';
 import { ThemeProvider } from '@emotion/react';
+import Swal from 'sweetalert2';
 
 const ManageClasses = () => {
     const navigate = useNavigate();
@@ -15,12 +16,18 @@ const ManageClasses = () => {
     const itemPerPage = 5;
     const totalPage = Math.ceil(classes.length / 5);
     const handleApprove = (id) => {
-        axiosSecure.put(`/change-status/${id}`, { status: 'approved' })
+       
+           
+            axiosSecure.put(`/change-status/${id}`, { status: 'approved' })
             .then(res => {
+                alert("Class is Approved.")
+                
                 console.log(res.data)
                 setClasses(classes.map(cls => cls._id == id ? { ...cls, status: 'approved' } : cls))
             })
             .catch(err => console.log(err))
+       
+        
     }
     const handelReject = (id) => {
         Swal.fire({
@@ -84,7 +91,9 @@ const ManageClasses = () => {
 
     useEffect(() => {
         axiosFetch.get('/classes-manage')
-            .then(res => setClasses(res.data))
+            .then(res => {setClasses(res.data)
+                
+            })
             .catch(err => console.log(err))
     }, [])
 
@@ -132,7 +141,7 @@ const ManageClasses = () => {
                                                             {
                                                                 <button
                                                                     onClick={() => handleApprove(cls._id)}
-                                                                    className='text-[12px]  cursor-auto disabled:bg-green-700 bg-green-500 py-1 rounded-md px-2 text-white'>
+                                                                    className='text-[12px]  cursor-pointer disabled:bg-green-700 bg-green-500 py-1 rounded-md px-2 text-white'>
                                                                     Approve
                                                                 </button>
                                                             }

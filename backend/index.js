@@ -219,12 +219,12 @@ async function run() {
     })
 
     //get user by id
-    app.get('/users/:id',verifyJWT,async(req,res)=>{
+    app.get('/users/:id', async (req, res) => {
       const id = req.params.id;
-      const query = {_id:new ObjectId(id)};
-      const result = await usersCollection.findOne(query);
-      res.send(result);
-    })
+      const query = { _id: new ObjectId(id) };
+      const user = await usersCollection.findOne(query);
+      res.send(user);
+  })
 
     //get user by email
     app.get('/user/:email', verifyJWT, async (req, res) => {
@@ -260,9 +260,9 @@ async function run() {
               skills: updatedUser.skills ? updatedUser.skills : null,
           }
       }
-      const result = await usersCollection.updateOne(filter, updateDoc, options);
+      const result = await userCollection.updateOne(filter, updateDoc, options);
       res.send(result);
-   })
+  })
 
 
 

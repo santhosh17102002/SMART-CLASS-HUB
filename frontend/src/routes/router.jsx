@@ -22,6 +22,8 @@ import PendingCourses from "../pages/Dashboard/Instructor/PendingCourses";
 import ApprovedCourse from "../pages/Dashboard/Instructor/ApprovedCourse";
 import AdminHome from "../pages/Dashboard/Admin/AdminHome";
 import ManageClasses from "../pages/Dashboard/Admin/ManageClasses";
+import ManageUsers from "../pages/Dashboard/Admin/ManageUsers";
+import UpdateUser from "../pages/Dashboard/Admin/UpdateUser";
 
 export const router = createBrowserRouter([
     {
@@ -113,9 +115,6 @@ export const router = createBrowserRouter([
           path:"my-approved",
           element:<ApprovedCourse/>
         },
-
-
-        //admin routes
         {
           path:"admin-home",
           element:<AdminHome/>
@@ -123,6 +122,15 @@ export const router = createBrowserRouter([
         {
           path:'manage-class',
           element: <ManageClasses/>
+        },
+        {
+          path:'manage-users',
+          element:<ManageUsers/>
+        },
+        {
+          path:'update-user/:id',
+          element: <UpdateUser/>,
+          loader : ({params}) =>fetch(`http://localhost:5000/users/${params.id}`)
         }
 
       ]

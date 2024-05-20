@@ -2,11 +2,13 @@ import React, { useState } from 'react'
 import useAxiosSecure from '../../../hooks/useAxiosSecure'
 import { useUser } from '../../../hooks/useUser';
 import { ScaleLoader } from 'react-spinners';
+import { Navigate, useNavigate } from 'react-router-dom';
 const KEY = import.meta.env.VITE_IMGDB_TOKEN
 const AddClass = () => {
     const API_URL = `https://api.imgbb.com/1/upload?key=${KEY}&name=`
     const axiosSecure = useAxiosSecure();
     const {currentUser,isLoading} = useUser();
+    const navigate = useNavigate();
     const [image,setImage] = useState(null);
     const handleFormSubmit = (e) => {
         e.preventDefault();
@@ -34,6 +36,9 @@ const AddClass = () => {
                     console.log(res.data);
                 })
             }
+            alert("successfully added the class")
+            navigate('/dashboard/my-pending')
+            
         })
     }
     const handleImageChange = (e)=>{

@@ -5,11 +5,11 @@ import useAxiosFetch from '../../hooks/useAxiosFetch';
 import useAxiosSecure from '../../hooks/useAxiosSecure';
 import { toast } from "react-toastify";
 import bannerImg1 from '../../assets/home/bann1.png'
-import girImage from "../../assets/home/girl.jpg"
+import girImage from "../../assets/home/nodp.jpg"
 import { DialogActions } from "@mui/material";
 import { BiTime } from "react-icons/bi";
 import { FaLanguage, FaLevelUpAlt, FaUser, FaUsers } from "react-icons/fa";
-import { GiClassicalKnowledge } from "react-icons/gi";
+import { GiClassicalKnowledge, GiRobotLeg } from "react-icons/gi";
 import { MdBookOnline } from "react-icons/md";
 
 const SingleClass = () => {
@@ -113,7 +113,7 @@ const SingleClass = () => {
                       <div className="flex-1">
                         <p className=" text-secondary  ">
                           Trainer
-                          <a href="#" className=" text-black">
+                          <a href="#" className=" text-black dark:text-white">
                             : {course?.instructorName}
                           </a>
                         </p>
@@ -122,7 +122,7 @@ const SingleClass = () => {
                     <div>
                       <span className=" text-secondary  ">
                         Last Update: 
-                        <a href="#" className=" text-black ml-1">
+                        <a href="#" className="dark:text-white text-black ml-1">
                          {new Date(course?.submitted).toLocaleDateString()}
                         </a>
                       </span>
@@ -202,7 +202,7 @@ const SingleClass = () => {
                                 <span className="flex-none">
                                   <img src="/logo.png" alt="" />
                                 </span>
-                                <span className="flex-1 text-black">
+                                <span className="flex-1 dark:text-white text-black">
                                   Software
                                 </span>
                               </div>
@@ -210,7 +210,7 @@ const SingleClass = () => {
                                 <div className="flex-none">
                                   <img src="/logo.png" alt="" />
                                 </div>
-                                <span className="flex-1 text-black">
+                                <span className="flex-1 dark:text-white text-black">
                                   Database
                                 </span>
                               </div>
@@ -218,7 +218,7 @@ const SingleClass = () => {
                                 <div className="flex-none">
                                   <img src="/logo.png" alt="" />
                                 </div>
-                                <span className="flex-1 text-black">
+                                <span className="flex-1 dark:text-white text-black">
                                   Networking
                                 </span>
                               </div>
@@ -283,7 +283,7 @@ const SingleClass = () => {
                       <li className=" flex space-x-3 border-b border-[#ECECEC] mb-4 pb-4 last:pb-0 past:mb-0 last:border-0">
                         <div className="flex-1 space-x-3 flex items-center">
                           <FaUser className="inline-flex"/>
-                          <div className=" text-black font-semibold">
+                          <div className="dark:text-white text-black font-semibold">
                             Instructor
                           </div>
                         </div>
@@ -293,7 +293,7 @@ const SingleClass = () => {
                       <li className=" flex space-x-3 border-b border-[#ECECEC] mb-4 pb-4 last:pb-0 past:mb-0 last:border-0">
                         <div className="flex-1 space-x-3 flex items-center">
                           <MdBookOnline/>
-                          <div className=" text-black font-semibold">
+                          <div className="dark:text-white text-black font-semibold">
                             Lectures
                           </div>
                         </div>
@@ -303,7 +303,7 @@ const SingleClass = () => {
                       <li className=" flex space-x-3 border-b border-[#ECECEC] mb-4 pb-4 last:pb-0 past:mb-0 last:border-0">
                         <div className="flex-1 space-x-3 flex items-center">
                           <BiTime />
-                          <div className=" text-black font-semibold">
+                          <div className="dark:text-white text-black font-semibold">
                             Duration
                           </div>
                         </div>
@@ -313,7 +313,7 @@ const SingleClass = () => {
                       <li className=" flex space-x-3 border-b border-[#ECECEC] mb-4 pb-4 last:pb-0 past:mb-0 last:border-0">
                         <div className="flex-1 space-x-3 flex items-center">
                           <FaUsers />
-                          <div className=" text-black font-semibold">
+                          <div className="dark:text-white text-black font-semibold">
                             Enrolled
                           </div>
                         </div>
@@ -323,7 +323,7 @@ const SingleClass = () => {
                       <li className=" flex space-x-3 border-b border-[#ECECEC] mb-4 pb-4 last:pb-0 past:mb-0 last:border-0">
                         <div className="flex-1 space-x-3 flex items-center">
                           <FaLevelUpAlt />
-                          <div className=" text-black font-semibold">
+                          <div className="dark:text-white text-black font-semibold">
                             Course level
                           </div>
                         </div>
@@ -333,7 +333,7 @@ const SingleClass = () => {
                       <li className=" flex space-x-3 border-b border-[#ECECEC] mb-4 pb-4 last:pb-0 past:mb-0 last:border-0">
                         <div className="flex-1 space-x-3 flex items-center">
                           <FaLanguage />
-                          <div className=" text-black font-semibold">
+                          <div className="dark:text-white text-black font-semibold">
                             Language
                           </div>
                         </div>
@@ -341,7 +341,7 @@ const SingleClass = () => {
                       </li>
                     </ul>
                     <ul className="flex space-x-4 items-center pt-3 ">
-                      <li className=" text-black font-semibold">Share On:</li>
+                      <li className="dark:text-white text-black font-semibold">Share On:</li>
                       <li>
                         <a href="#" className="flex h-10 w-10">
                           <img src="/logo.png" alt="" />
@@ -420,7 +420,7 @@ const SingleClass = () => {
                           </div>
                         </div>
                         <div className="flex-1 ">
-                          <div className="mb-1 font-semibold text-black">
+                          <div className="mb-1 font-semibold dark:text-white text-black">
                             Greatest Passion In...
                           </div>
                           <span className=" text-secondary font-semibold">
@@ -439,7 +439,7 @@ const SingleClass = () => {
                           </div>
                         </div>
                         <div className="flex-1 ">
-                          <div className="mb-1 font-semibold text-black">
+                          <div className="mb-1 font-semibold dark:text-white text-black">
                             Greatest Passion In...
                           </div>
                           <span className=" text-secondary font-semibold">

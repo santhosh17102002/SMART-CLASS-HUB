@@ -17,22 +17,22 @@ import { TbBrandAppleArcade } from 'react-icons/tb';
 import Scroll from '../hooks/useScroll';
 const adminNavItems = [
     {
-        to:"dashboard/admin-home", 
+        to:"/dashboard/admin-home", 
         icon: <BiHomeAlt className='text-2xl'/>,
         label : "Dashboard Home"
     },
     {
-        to:"dashboard/manage-users", 
+        to:"/dashboard/manage-users", 
         icon: <FaUsers className='text-2xl'/>,
         label : "Manage Users"
     },
     {
-        to:"dashboard/manage-class", 
+        to:"/dashboard/manage-class", 
         icon: <BsFillPostcardFill className='text-2xl'/>,
         label : "Manage Class"
     },
     {
-        to:"dashboard/manage-applications", 
+        to:"/dashboard/manage-applications", 
         icon: <TbBrandAppleArcade className='text-2xl'/>,
         label : "Applications"
     }
@@ -186,7 +186,7 @@ const DashboardLayout = () => {
                     {
                         role === "admin" && adminNavItems.map((menuItem,index)=> (
                             <li key={index} className='mb-2'>
-
+                                
                                 <NavLink to={menuItem.to}
                                 className={({ isActive }) =>
                                             `flex ${isActive ? "bg-red-500 text-white " : "text-white"

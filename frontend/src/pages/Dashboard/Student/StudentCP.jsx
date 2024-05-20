@@ -9,7 +9,7 @@ const StudentCP = () => {
   return (
     <div className='h-screen flex justify-center items-center p-2'>
       <div>
-        <div className='flex justify-center items-center mx-auto '>
+        <div className='mt-10 flex justify-center items-center mx-auto '>
             <img onContextMenu={e=> e.preventDefault()} src={welcomeImg} className='sm:h-[200px] md:h-[500px] ' placeholder='blur'/>
         </div>
         <h1 className=' ml-5 text-4xl capitalize font-bold'>Hi, <span className='text-secondary items-stretch'>{currentUser?.name}! </span> Welcome to your dashboard</h1>
