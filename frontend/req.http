@@ -1,5 +1,5 @@
 ###
-post http://localhost:5000/new-class
+post https://smart-class-hub.onrender.com/new-class
 Content-Type: application/json
 
 {

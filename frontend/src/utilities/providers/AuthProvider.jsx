@@ -79,7 +79,7 @@ function AuthProvider({children}) {
           if (user) {
             const fetchData = async () => {
               try {
-                const response = await axios.post('http://localhost:5000/api/set-token', {
+                const response = await axios.post('https://smart-class-hub.onrender.com/api/set-token', {
                   email: user.email,
                   name: user.displayName,
                 });

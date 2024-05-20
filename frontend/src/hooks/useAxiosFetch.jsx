@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import axios from "axios";
 function useAxiosFetch() {
     const axiosInstance = axios.create({
-        baseURL: 'http://localhost:5000/',
+        baseURL: 'https://smart-class-hub.onrender.com/',
     });
 
     //interceptors taken from axios api

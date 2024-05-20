@@ -8,7 +8,7 @@ function useAxiosSecure() {
     const navigate = useNavigate();
     const axiosSecure = axios.create(
         {
-            baseURL:'http://localhost:5000'
+            baseURL:'https://smart-class-hub.onrender.com'
         }
     )
 

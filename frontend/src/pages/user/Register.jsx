@@ -30,7 +30,7 @@ const Register = () => {
           }
           if (user.email && user.displayName) {
             return axios
-                .post('http://localhost:5000/new-user', userImp)
+                .post('https://smart-class-hub.onrender.com/new-user', userImp)
                 .then(() => {
                   
                   setError('')

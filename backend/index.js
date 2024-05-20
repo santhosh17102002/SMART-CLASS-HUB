@@ -103,6 +103,10 @@ async function run() {
       const result = await classesCollection.insertOne(newClass);
       res.send(result);
     });
+
+    app.get('/',(req,res)=>{
+      res.end("Smart Class Hub server is running")
+    })
     
     app.get('/classes',async(req,res)=>{
       const query = {status:"approved"};
@@ -522,7 +526,7 @@ async function run() {
     await client.db("admin").command({ ping: 1 });
     console.log("Pinged your deployment. You successfully connected to MongoDB!");
     app.listen(port,()=>{
-      console.log(`listening on ${port}`)
+      console.log(`Smart Class Hub is listening on ${port}`)
   })
   } finally {
     // Ensures that the client will close when you finish/error

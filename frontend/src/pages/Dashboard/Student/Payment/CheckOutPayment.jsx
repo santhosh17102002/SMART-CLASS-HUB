@@ -7,7 +7,7 @@ import { Navigate } from 'react-router-dom';
 const CheckOutPayment = ({price,cartItem}) => {
     const stripe = useStripe();
   const elements = useElements();
-    const URL = `http://localhost:5000/payment-info?${cartItem && `classId=${cartItem}`}`
+    const URL = `https://smart-class-hub.onrender.com/payment-info?${cartItem && `classId=${cartItem}`}`
     const axiosSecure = useAxiosSecure();
     const {currentUser,isLoading} = useUser();
     const [clientSecret,setClientSecret] = useState('');

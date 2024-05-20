@@ -22,7 +22,7 @@ function GoogleLogin() {
                 };
 
                 if (user.email && user.displayName) {
-                    return axios.post('http://localhost:5000/new-user', userImp)
+                    return axios.post('https://smart-class-hub.onrender.com/new-user', userImp)
                         .then(() => {
                             navigate('/');
                             return 'Registration successful!';
