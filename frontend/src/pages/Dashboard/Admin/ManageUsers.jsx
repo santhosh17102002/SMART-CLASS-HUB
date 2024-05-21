@@ -18,6 +18,13 @@ const ManageUsers = () => {
             .catch(err => console.log(err))
     }, [])
 
+    const handleUpdate = (id) => {
+        axiosFetch.get(`/users/${id}`).then(res=>{
+            console.log(res.data)
+            navigate(`/dashboard/update-user/${res?.data?._id}`)
+        }).catch(err=>console.log(err))
+        
+    }
     const handleDelete = (id) => {
         Swal.fire({
             title: 'Are you sure?',
@@ -74,7 +81,7 @@ const ManageUsers = () => {
                                                 <td className="whitespace-nowrap px-6 py-4">{user.name}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">{user.role}</td>
                                                 <td className="whitespace-nowrap px-6 py-4">
-                                                    <span onClick={()=>navigate(`/dashboard/update-user/${user._id}`)} className='inline-flex items-center gap-2 cursor-pointer bg-green-500 py-1 rounded-md px-2 text-white'>Update <GrUpdate className='text-white' /></span>
+                                                    <span onClick={()=>handleUpdate(user._id)} className='inline-flex items-center gap-2 cursor-pointer bg-green-500 py-1 rounded-md px-2 text-white'>Update <GrUpdate className='text-white' /></span>
                                                 </td>
                                                 <td className="whitespace-nowrap px-6 py-4">
                                                     <span onClick={() => handleDelete(user._id)} className='inline-flex items-center gap-2 cursor-pointer bg-red-600 py-1 rounded-md px-2 text-white'>Delete <FcDeleteDatabase /></span>

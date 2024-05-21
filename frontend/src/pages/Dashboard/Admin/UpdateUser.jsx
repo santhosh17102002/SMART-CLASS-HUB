@@ -21,6 +21,7 @@ const UpdateUser = () => {
             axiosSecure.put(`/update-user/${userCredentials?._id}`, updatedData)
                 .then((res) => {
                     console.log(res.data);
+                    alert("Successfully updated")
                     return 'Registration successful!';
                 })
                 .catch((err) => {
@@ -39,8 +40,8 @@ const UpdateUser = () => {
 
     return (
         <div>
-            <h1 className='text-center text-4xl font-bold mt-5'>Update  : <span className='text-secondary'>{user?.displayName}</span></h1>
-            <p className='text-center'>Change details about <span className='text-red-400 font-bold'>{user?.displayName}</span></p>
+            <h1 className='text-center text-4xl font-bold mt-5'>Update  : <span className='text-secondary'>{userCredentials?.name}</span></h1>
+            <p className='text-center'>Change details about <span className='text-red-400 font-bold'>{userCredentials?.name}</span></p>
             {/* Form area starts here */}
             <section className="">
                 <div className="mx-auto  px-4 py-16 sm:px-6 lg:px-8">
