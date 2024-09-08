@@ -187,7 +187,7 @@ const NavBar = () => {
                             }
                             {
                                 user && <li>
-                                    <img src={user?.photoURL} alt="" className='h-[40px] w-[40px] rounded-full'/>
+                                    <img src={user?.photoURL || photoURL} alt="" className='h-[40px] w-[40px] rounded-full'/>
                                 </li>
                             }
 
